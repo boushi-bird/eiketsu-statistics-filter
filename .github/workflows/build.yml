@@ -1,0 +1,48 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  NODE_ENV: production
+  APP_PATH: '/eiketsu-statistics-filter/'
+  GH_PAGES_URL: 'https://boushi-bird.github.io'
+  GOOGLE_TAG_MANAGER_CONTAINER_ID: ${{secrets.GOOGLE_TAG_MANAGER_CONTAINER_ID}}
+
+concurrency:
+  group: build-main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+      - name: Checkout dist
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          path: dist
+      - name: Install main
+        run: npm --production=false install
+      - name: Build main
+        run: npm run build
+      - name: Commit
+        working-directory: dist
+        run: |
+          if [ -n "$(git status --short)" ]; then
+            git config user.name "eiketsu-taisen-data BOT"
+            git config user.email "eiketsu-taisen-data@example.com"
+            git add .
+            git commit -m "Built from commit $(cd .. && git log -n 1 --format=%h)"
+          fi
+      - name: Push
+        working-directory: dist
+        run: git push

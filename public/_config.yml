@@ -1,0 +1,4 @@
+theme: jekyll-theme-cayman
+lang: ja
+plugins:
+  - jekyll-sitemap
