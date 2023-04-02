@@ -1,0 +1,6 @@
+theme: jekyll-theme-cayman
+lang: ja
+plugins:
+  - jekyll-sitemap
+url: https://boushi-bird.github.io
+google_tag_manager: GTM-WFQ64LJ
